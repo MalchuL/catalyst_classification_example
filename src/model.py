@@ -39,6 +39,8 @@ class MultiHeadNet(nn.Module):
 
         for key, head_net in self.head_nets.items():
             result[key] = head_net(embeddings)
+            if result[key].shape[-1] == 1:
+                result[key] = result[key].view(-1)
 
         return result
 

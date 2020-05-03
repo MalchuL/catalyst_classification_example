@@ -1,5 +1,5 @@
 shared:
-  class_names: &class_names ['not_hotdog', 'hotdog']
+  class_names: &class_names ['hotdog', 'not_hotdog']
   image_size: &image_size 224
   dataset_path: &dataset_path
 
@@ -89,6 +89,40 @@ stages:
 
     class:
       criterion: FocalLossMultiClass
+
+
+
+  stage1:
+    state_params:
+      num_epochs: 8
+
+    optimizer_params:
+      # optimizer: Lookahead
+      # base_optimizer_params:
+      optimizer: Adam
+      lr: 0.001
+      weight_decay: 0.0001
+
+    scheduler_params:
+      scheduler: MultiStepLR
+      milestones: [8]
+      gamma: 0.3
+
+  # tune whole network
+  stage2:
+    state_params:
+      num_epochs: 24
+
+    optimizer_params:
+      # optimizer: Lookahead
+      # base_optimizer_params:
+      optimizer: Adam
+      lr: 0.0003
+
+    scheduler_params:
+      scheduler: MultiStepLR
+      milestones: [12, 20]
+      gamma: 0.3
 
   callbacks_params:
     loss_class:

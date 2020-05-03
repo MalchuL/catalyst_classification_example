@@ -2,7 +2,7 @@
 1. Unpack dataset into "data" folder.
 2. Run `sh bin/prepare_data.sh` 
 3. Run `catalyst-dl run -C configs/_common.yml configs/main.yml --logdir=baseline`
-
+4 Run `catalyst-dl run -C configs/_common.yml configs/infer.yml --logdir=baseline --logdir=baseline --autoresume=last`
 
 #### Data structure
 Make sure, that final folder with data has the required structure:

@@ -29,6 +29,8 @@ class Experiment(ConfigExperiment):
         elif stage == "stage2":
             for param in model_.encoder_net.parameters():
                 param.requires_grad = True
+        elif stage == 'infer':
+            print('infer stage')
         return model_
 
     def get_datasets(
@@ -109,5 +111,8 @@ class Experiment(ConfigExperiment):
                     )
                     dataset = {"dataset": dataset, "sampler": sampler}
                 datasets[mode] = dataset
+
+        if stage == 'infer':
+            del datasets['train']
 
         return datasets
