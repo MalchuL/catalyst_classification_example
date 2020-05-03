@@ -1,19 +1,18 @@
+
 model_params:
   model: MultiHeadNet
   encoder_params:
-    arch: resnet18
-    pretrained: True
-    frozen: True
-    pooling: MaxPool2d
-    pooling_kwargs:
-      kernel_size: 7      # [14, 7]
-      stride: 7           # [14, 7]
+    model: EfficientNet
+    model_name: efficientnet-b3
+    in_channels: 3
+    num_classes: &hidden 512
   embedding_net_params:
+    input_channels: *hidden
     hiddens: [512]
     layer_fn: {"module": "Linear", "bias": False}
     norm_fn: BatchNorm1d
     activation_fn: ReLU
-    dropout_fn: Dropout
+    #dropout_fn: Dropout
     residual: "soft"
 
 runner_params:

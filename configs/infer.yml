@@ -18,9 +18,8 @@ stages:
     num_workers: 5
     batch_size: 1
     #one_hot_classes: *num_classes NO ONE HOT
-    in_csv_train: data/train/dataset_train.csv
-    in_csv_valid: data/train/dataset_valid.csv
-    datapath: data/train/
+    in_csv_valid: data/preprocessed_test/test.csv
+    datapath: data/preprocessed_test
 
   transform_params:
 
@@ -46,6 +45,6 @@ stages:
     callbacks_params:
       loss_class:
         callback: PredictionCallback
-        input_key: filepath
-        output_key: logits
+        path_key: filepath
+        probs_key: logits
 

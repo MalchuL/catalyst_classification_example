@@ -6,7 +6,8 @@ import torch.nn as nn
 
 from catalyst import utils
 from catalyst.contrib.models import SequentialNet
-from catalyst.contrib.models.cv import ResnetEncoder
+from catalyst.dl import registry
+from efficientnet_pytorch import EfficientNet
 
 
 class MultiHeadNet(nn.Module):
@@ -57,12 +58,13 @@ class MultiHeadNet(nn.Module):
         embedding_net_params_ = deepcopy(embedding_net_params)
         heads_params_ = deepcopy(heads_params)
 
-        encoder_net = ResnetEncoder(**encoder_params_)
-        encoder_input_shape = (3, image_size, image_size)
-        encoder_output = utils.get_network_output(
-            encoder_net, encoder_input_shape
-        )
-        enc_size = encoder_output.nelement()
+        model_name = encoder_params_.pop('model')
+
+        encoder_net = registry.MODELS.get_instance(model_name, **encoder_params_)
+
+
+
+        enc_size = embedding_net_params_.pop('input_channels')
         embedding_net_params_["hiddens"].insert(0, enc_size)
         embedding_net = SequentialNet(**embedding_net_params_)
         emb_size = embedding_net_params_["hiddens"][-1]

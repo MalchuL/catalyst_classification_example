@@ -1,10 +1,28 @@
-from typing import List
-from collections import defaultdict
-
 import numpy as np
+import os
+import re
+
+from typing import List
+
 
 from catalyst.core import Callback, CallbackOrder, State
 from catalyst.dl.utils import get_activation_fn
+
+
+
+def tryint(s):
+    try:
+        return int(s)
+    except:
+        return s
+
+
+def alphanum_key(s):
+    """ Turn a string into a list of string and number chunks.
+        "z23a" -> ["z", 23, "a"]
+    """
+    return [tryint(c) for c in re.split('([0-9]+)', s)]
+
 
 
 class PredictionCallback(Callback):
@@ -17,11 +35,11 @@ class PredictionCallback(Callback):
     """
 
     def __init__(
-        self,
-        input_key: str = "filepath",
-        output_key: str = "logits",
-        class_names: List[str] = None,
-        activation: str = "Softmax",
+            self,
+            path_key: str = "filepath",
+            probs_key: str = "logits",
+            activation: str = "Softmax",
+            out_file: str = 'infer_pred.txt'
     ):
         """
         Args:
@@ -41,11 +59,25 @@ class PredictionCallback(Callback):
                 Must be one of ['none', 'Sigmoid', 'Softmax2d']
         """
         super().__init__(CallbackOrder.Logging)
-        self.input_key = input_key
-        self.output_key = output_key
-        self.class_names = class_names
+        self.input_key = path_key
+        self.output_key = probs_key
         self.activation = activation
         self.activation_fn = get_activation_fn(self.activation)
+        self.preds = []
+        self.out_file = out_file
+
+    def on_epoch_start(self, state: "State"):
+        self.preds = []
+
+    def on_epoch_end(self, state: "State"):
+        print('Start infer prediction')
+        self.preds.sort(key=lambda x: alphanum_key(x[0]))
+
+        if self.out_file:
+            with open(str(state.logdir / self.out_file),'w') as f:
+                for name, class_id in self.preds:
+                    f.write(f'{name} {class_id}\n')
+
 
 
     def on_batch_end(self, state: State):
@@ -55,12 +87,14 @@ class PredictionCallback(Callback):
             state (State): current state
         """
         logits = state.batch_out[self.output_key].detach().float()
-        targets = state.input[self.input_key]
+        paths = state.input[self.input_key]
         probabilities = self.activation_fn(logits).detach().cpu().numpy().tolist()
 
-        print(targets, probabilities)
-
-
+        for name, probs in zip(paths, probabilities):
+            filename = os.path.basename(name)
+            class_id = np.argmax(probs)
+            self.preds.append([filename, class_id])
+            print(filename, class_id)
 
 
 __all__ = ["PredictionCallback"]

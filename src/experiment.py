@@ -71,25 +71,34 @@ class Experiment(ConfigExperiment):
         open_fn = [
             ImageReader(
                 input_key="filepath", output_key="image", rootpath=datapath
-            ),
-            ScalarReader(
+            )
+        ]
+
+        if stage.startswith('infer'):
+            open_fn.append(ScalarReader(
+                input_key="filepath",
+                output_key="filepath",
+                default_value=-1,
+                dtype=np.str,
+            ))
+        else:
+            open_fn.append(ScalarReader(
                 input_key="class",
                 output_key="targets",
                 default_value=-1,
                 dtype=np.int64,
-            ),
-        ]
+            ))
 
-        if one_hot_classes:
-            open_fn.append(
-                ScalarReader(
-                    input_key="class",
-                    output_key="targets_one_hot",
-                    default_value=-1,
-                    dtype=np.int64,
-                    one_hot_classes=one_hot_classes,
+            if one_hot_classes:
+                open_fn.append(
+                    ScalarReader(
+                        input_key="class",
+                        output_key="targets_one_hot",
+                        default_value=-1,
+                        dtype=np.int64,
+                        one_hot_classes=one_hot_classes,
+                    )
                 )
-            )
 
         open_fn = ReaderCompose(readers=open_fn)
 
@@ -113,6 +122,10 @@ class Experiment(ConfigExperiment):
                 datasets[mode] = dataset
 
         if stage == 'infer':
-            del datasets['train']
+            datasets['infer'] = datasets['valid']
+            del datasets['valid']
+            if 'train' in datasets:
+                del datasets['train']
+
 
         return datasets

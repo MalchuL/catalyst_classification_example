@@ -1,5 +1,6 @@
 
 1. Unpack dataset into "data" folder.
+2. Rename folders with_classes to 0,1,... and so on. For folders without classes not renames 
 2. Run `sh bin/prepare_data.sh` 
 3. Run `catalyst-dl run -C configs/_common.yml configs/main.yml --logdir=baseline`
 4 Run `catalyst-dl run -C configs/_common.yml configs/infer.yml --logdir=baseline --logdir=baseline --autoresume=last`

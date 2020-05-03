@@ -1,4 +1,4 @@
 {
-    "hotdog": 0,
-    "not_hotdog": 1
+    "0_not_hotdog": 0,
+    "1_hotdog": 1
 }
