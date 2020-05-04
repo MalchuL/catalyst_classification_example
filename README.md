@@ -1,9 +1,9 @@
-##Catalyst classification example with training and infer stage
+## Catalyst classification example with training and infer stage
 
-###Installation:
+### Installation:
 To install all requirements run `pip install -r requirements/requirements.txt`
 
-###Training
+### Training
 1. Unpack dataset into "data" folder. In my example I use 2 classes. You should have next structure.
 ```
 data
