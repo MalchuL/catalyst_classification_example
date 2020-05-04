@@ -3,7 +3,7 @@ model_params:
   model: MultiHeadNet
   encoder_params:
     model: EfficientNet
-    model_name: efficientnet-b3
+    model_name: efficientnet-b2
     in_channels: 3
     num_classes: &hidden 512
   embedding_net_params:

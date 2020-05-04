@@ -94,35 +94,29 @@ stages:
 
   stage1:
     state_params:
-      num_epochs: 8
+      num_epochs: 128
 
     optimizer_params:
-      # optimizer: Lookahead
-      # base_optimizer_params:
       optimizer: Adam
-      lr: 0.001
+      lr: 0.0003
       weight_decay: 0.0001
 
     scheduler_params:
-      scheduler: MultiStepLR
-      milestones: [8]
-      gamma: 0.3
+      scheduler: ExponentialLR
+      gamma: 0.99
 
   # tune whole network
   stage2:
     state_params:
-      num_epochs: 24
+      num_epochs: 256
 
     optimizer_params:
-      # optimizer: Lookahead
-      # base_optimizer_params:
       optimizer: Adam
-      lr: 0.0003
+      lr: 0.0001
 
     scheduler_params:
-      scheduler: MultiStepLR
-      milestones: [12, 20]
-      gamma: 0.3
+      scheduler: ExponentialLR
+      gamma: 0.99
 
   callbacks_params:
     loss_class:

@@ -86,7 +86,7 @@ class PredictionCallback(Callback):
         Args:
             state (State): current state
         """
-        logits = state.batch_out[self.output_key].detach().float()
+        logits = state.output[self.output_key].detach().float()
         paths = state.input[self.input_key]
         probabilities = self.activation_fn(logits).detach().cpu().numpy().tolist()
 
@@ -94,7 +94,7 @@ class PredictionCallback(Callback):
             filename = os.path.basename(name)
             class_id = np.argmax(probs)
             self.preds.append([filename, class_id])
-            print(filename, class_id)
+            print(filename, class_id, '      probs', probs)
 
 
 __all__ = ["PredictionCallback"]

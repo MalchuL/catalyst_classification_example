@@ -47,4 +47,5 @@ stages:
         callback: PredictionCallback
         path_key: filepath
         probs_key: logits
-
+      loader:
+        callback: CheckpointCallback
