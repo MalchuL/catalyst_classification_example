@@ -53,6 +53,6 @@ data
         ├── 0002.jpg 
         └── ... 
 ```
-3. Run `sh bin/prepare_data.sh` to prepare data.
+3. Run `sh bin/prepare_data.sh` to prepare data. It splits you train folder into train and val and preprocess test for infer stage.
 4. Run `catalyst-dl run -C configs/_common.yml configs/main.yml --logdir=baseline` If you want use more than 2 classes change `&num_classes 2` to custom number in infer.yml and main.yml files. (Important! Not set to 1 class, this feature isn't supported)
-5. Run `catalyst-dl run -C configs/_common.yml configs/infer.yml --logdir=baseline --logdir=baseline --autoresume=last` to make predictions. It shows prediction for each file and dump it into 'infer_pred.txt' file in 'baseline' folder
+5. Run `catalyst-dl run -C configs/_common.yml configs/infer.yml --logdir=baseline --logdir=baseline --autoresume=best` to make predictions. It shows prediction for each file and dump it into 'infer_pred.txt' file in 'baseline' folder
