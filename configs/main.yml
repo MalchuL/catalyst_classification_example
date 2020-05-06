@@ -131,6 +131,7 @@ stages:
       input_key: targets
       output_key: logits
       prefix: accuracy_class
+      threshold: 0.5
       num_classes: *num_classes
     auc_class:
       callback: AUCCallback
@@ -143,6 +144,7 @@ stages:
       callback: F1ScoreCallback
       input_key: targets_one_hot
       output_key: logits
+      threshold: 0.5
       activation: Softmax
     cm_class:
       callback: ConfusionMatrixCallback
